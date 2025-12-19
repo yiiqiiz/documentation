@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ceramic Digital Catalog</title>
+
+  <style>
+    :root{
+      --gap: 14px;
+      --radius: 14px;
+      --bg: #0b0b0c;
+      --card: #141418;
+      --text: rgba(255,255,255,.9);
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 18px 10px;
+    }
+
+    h1{
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+      font-family: "Nimbus Roman D",
+                   "Nimbus Roman",
+                   "Times New Roman",
+                   Times,
+                   serif;
+    }
+
+    header p{
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0.7;
+    }
+
+    .grid{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 18px 28px;
+      display: grid;
+      gap: var(--gap);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .tile{
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+
+    .tile:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.16);
+    }
+
+    .frame{
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      position: relative;
+    }
+
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Ceramic Digital Catalog</h1>
+    <p>Click an image to view its explanatory image. Click again to return.</p>
+  </header>
+
+  <main class="grid" id="grid"></main>
+
+  <script>
+    const items = [
+      { main: "01.jpg", alt: "01_note.jpg" },
+      { main: "02.jpg", alt: "02_note.jpg" },
+      { main: "03.jpg", alt: "03_note.jpg" },
+      { main: "04.jpg", alt: "04_note.jpg" },
+      { main: "05.jpg", alt: "05_note.jpg" },
+      { main: "06.jpg", alt: "06_note.jpg" },
+      { main: "07.jpg", alt: "07_note.jpg" },
+      { main: "08.jpg", alt: "08_note.jpg" },
+      { main: "09.jpg", alt: "09_note.jpg" },
+    ];
+
+    const grid = document.getElementById("grid");
+
+    function createTile({ main, alt }, index){
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.dataset.main = main;
+      tile.dataset.alt = alt;
+      tile.dataset.state = "main";
+
+      const frame = document.createElement("div");
+      frame.className = "frame";
+
+      const img = document.createElement("img");
+      img.src = main;
+      img.alt = `Ceramic piece ${index + 1}`;
+      img.loading = "lazy";
+
+      tile.addEventListener("click", () => {
+        const showingMain = tile.dataset.state === "main";
+        img.src = showingMain ? tile.dataset.alt : tile.dataset.main;
+        tile.dataset.state = showingMain ? "alt" : "main";
+      });
+
+      frame.appendChild(img);
+      tile.appendChild(frame);
+
+      return tile;
+    }
+
+    items.forEach((item, i) => {
+      grid.appendChild(createTile(item, i));
+    });
+  </script>
+
+</body>
+</html>
